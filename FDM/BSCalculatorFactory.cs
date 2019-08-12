@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FDM
 {
-    public class BSCalculator
+    public class BSCalculatorFactory
     {
         private int spatialDivisionNum;
         private int temporaryDivisionNum;
@@ -33,10 +33,10 @@ namespace FDM
         }
 
         //constructor
-        public BSCalculator(int temporaryDivisionNum,
-                            int spatialDivisionNum,
-                            double maturity,
-                            double maxValue)
+        public BSCalculatorFactory(int temporaryDivisionNum,
+                                   int spatialDivisionNum,
+                                   double maturity,
+                                   double maxValue)
         {
             this.TemporaryDivisionNum = temporaryDivisionNum;
             this.SpatialDivisionNum = spatialDivisionNum;
