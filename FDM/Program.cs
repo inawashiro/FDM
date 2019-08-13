@@ -6,11 +6,18 @@ namespace FDM
     {
         static void Main(string[] args)
         {
-            var test = new BSCalculatorFactory(100, 100, 1.0, 120);
-            Console.WriteLine($"SpatialDivisionNum = {test.SpatialDivisionNum}");
-            Console.WriteLine($"TemporalDivisionNum = {test.TemporaryDivisionNum}");
-            Console.WriteLine($"Maturity = {test.Maturity}");
-            Console.WriteLine($"MaxValue = {test.MaxValue}");
+            var bSVanillaOptionValueCalculator = new BSVanillaOptionValueCalculator();
+            var bSVanillaOptionPV
+                = bSVanillaOptionValueCalculator.CalculatePV(10, 10, 200, 110, 1, 0.1, 2.0, 0.3, true);
+
+            for (int l = 0; l < 10; l++)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    Console.Write($"{bSVanillaOptionPV[l, i]}, ");
+                }
+                Console.WriteLine();
+            }
         }
     }
 }
