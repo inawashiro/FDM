@@ -67,8 +67,7 @@ namespace FDM.Tests
                 }
             }
             relativeErrorTotal = squareAbsoluteErrorSum / squareAnalyticSum;
-            bool isGood = relativeErrorTotal < tol ? true : false;
-            Assert.True(isGood);
+            Assert.True(relativeErrorTotal < tol ? true : false);
         }
     }
 }

@@ -24,6 +24,7 @@ namespace FDM
                 pVArray[l, xNum - 1] = Math.Max(sign * (((double)xNum - 1) / (double)xNum * boundaryPV - strike), 0);
             }
         }
+
         private static void SetInitialCondition(
             int xNum,
             double[,] pVArray,
@@ -40,6 +41,7 @@ namespace FDM
                 pVArray[0, i] = Math.Max(sign * (initialPV - strike), 0);
             }
         }
+
         public static double[,] CalculatePVArray(
             int xNum,
             int tNum,
