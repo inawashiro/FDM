@@ -67,7 +67,7 @@ namespace FDM
                 {
                     double initialPV = i * boundaryPV / xNum;
 
-                    double a1 = domesticRate * initialPV;
+                    double a1 = (domesticRate - foreignRate) * initialPV;
                     double b11 = 0.5 * volatility * volatility * initialPV * initialPV;
 
                     double a = b11 * dt / (dx * dx) - 0.5 * a1 * dt / dx;

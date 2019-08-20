@@ -16,15 +16,15 @@
 //            double[,] pVArray,
 //            double boundaryPV,
 //            double strike,
-//            bool isCall) { }
-        
+//            bool isCall)
+//        { }
+
 //        private static void SetInitialCondition(
 //            int xNum,
 //            double[,] pVArray,
 //            double boundaryPV,
 //            double strike,
-//            bool isCall,
-//            double barrier)
+//            bool isCall)
 //        {
 //            for (int i = 1; i < xNum - 1; i++)
 //            {
@@ -32,7 +32,7 @@
 
 //                int sign = isCall ? 1 : -1;
 
-//                pVArray[0, i] = initialPV < barrier ? Math.Max(sign * (initialPV - strike), 0) : 0;
+//                pVArray[0, i] = Math.Max(sign * (initialPV - strike), 0);
 //            }
 //        }
 
@@ -52,9 +52,8 @@
 //            int sign = isCall ? 1 : -1;
 
 //            double pV =
-//                sign * initialPV * Normal.CDF(0, 1, sign * dPlus)
+//                sign * initialPV * Math.Exp(-foreignRate * maturity) * Normal.CDF(0, 1, sign * dPlus)
 //                - sign * strike * Math.Exp(-domesticRate * maturity) * Normal.CDF(0, 1, sign * dMinus);
-
 //            return pV;
 //        }
 
@@ -67,13 +66,12 @@
 //            double domesticRate,
 //            double foreignRate,
 //            double volatility,
-//            bool isCall,
-//            double barrier)
+//            bool isCall)
 //        {
 //            var pVArray = new double[tNum, xNum];
 
 //            SetBoundaryCondition(tNum, xNum, pVArray, boundaryPV, strike, isCall);
-//            SetInitialCondition(xNum, pVArray, boundaryPV, strike, isCall, barrier);
+//            SetInitialCondition(xNum, pVArray, boundaryPV, strike, isCall);
 
 //            for (int l = 1; l < tNum; l++)
 //            {

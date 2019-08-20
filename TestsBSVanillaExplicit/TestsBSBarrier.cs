@@ -16,8 +16,8 @@
 //        private static readonly double boundaryPV = 200;
 //        private static readonly double strike = 100;
 //        private static readonly double boundaryTime = 0.2;
-//        private static readonly double domesticRate = 0.1;
-//        private static readonly double foreignRate = 0.0;
+//        private static readonly double domesticRate = -1e-3;
+//        private static readonly double foreignRate = 0.02;
 //        private static readonly double volatility = 0.3;
 //        private static readonly double barrier = 150;
 
