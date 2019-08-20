@@ -16,7 +16,8 @@ namespace FDM
             double[,] pVArray,
             double boundaryPV,
             double strike,
-            bool isCall) { }
+            bool isCall)
+        { }
 
         private static void SetInitialCondition(
             int xNum,
@@ -51,9 +52,8 @@ namespace FDM
             int sign = isCall ? 1 : -1;
 
             double pV =
-                sign * initialPV * Normal.CDF(0, 1, sign * dPlus)
+                sign * initialPV * Math.Exp(-foreignRate * maturity) * Normal.CDF(0, 1, sign * dPlus)
                 - sign * strike * Math.Exp(-domesticRate * maturity) * Normal.CDF(0, 1, sign * dMinus);
-
             return pV;
         }
 
