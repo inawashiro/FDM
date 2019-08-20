@@ -11,19 +11,19 @@ namespace FDM.Tests
 {
     public class BSVanillaPVTests
     {
-        private static readonly int tNum = 10;
-        private static readonly int xNum = 10;
+        private static readonly int tNum = 20;
+        private static readonly int xNum = 20;
         private static readonly double boundaryPV = 200;
         private static readonly double strike = 100;
         private static readonly double boundaryTime = 0.2;
-        private static readonly double domesticRate = -1.5e-3;
+        private static readonly double domesticRate = -1e-3;
         private static readonly double foreignRate = 0.02;
         private static readonly double volatility = 0.3;
 
         [Fact]
         public void BSVanillaTest()
         {
-            double tol = 1e-3;
+            double tol = 1e-2;
             var isCall = true;
 
             double squareAbsoluteErrorSum = 0;
@@ -66,7 +66,7 @@ namespace FDM.Tests
                     squareAnalyticSum += pVAnalytic[l, i] * pVAnalytic[l, i];
                 }
             }
-            relativeErrorTotal = squareAbsoluteErrorSum / squareAnalyticSum;
+            relativeErrorTotal = Math.Sqrt(squareAbsoluteErrorSum / squareAnalyticSum);
             Assert.True(relativeErrorTotal < tol ? true : false);
         }
     }

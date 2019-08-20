@@ -45,7 +45,7 @@ namespace FDM
             double volatility,
             bool isCall)
         {
-            double d = (Math.Log(initialPV / strike) + domesticRate * maturity) / (volatility * Math.Sqrt(maturity));
+            double d = (Math.Log(initialPV / strike) + (domesticRate - foreignRate) * maturity) / (volatility * Math.Sqrt(maturity));
             double dPlus = d + 0.5 * volatility * Math.Sqrt(maturity);
             double dMinus = d - 0.5 * volatility * Math.Sqrt(maturity);
 

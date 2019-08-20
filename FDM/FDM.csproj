@@ -8,6 +8,8 @@
   <ItemGroup>
     <Compile Remove="BSOptionValueCalculatorFactory.cs" />
     <Compile Remove="IOptionValueCalculator.cs" />
+    <Compile Remove="BSOptionValueCalculatorFactory.cs" />
+    <Compile Remove="IOptionValueCalculator.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MathNet.Numerics" Version="4.8.1" />
