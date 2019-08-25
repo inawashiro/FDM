@@ -7,9 +7,9 @@ using System.IO;
 
 namespace FDM
 {
-    class FileUtils
+    class CSVWriter
     {
-        public static void CSVWriter(StreamWriter file, double[,] data, double[] tIndex, double[] xIndex)
+        public static void Write2D(StreamWriter file, double[,] data, double[] tIndex, double[] xIndex)
         {
             int tNum = data.GetLength(0);
             int xNum = data.GetLength(1);
