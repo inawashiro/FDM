@@ -1,84 +1,94 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace FDM
-//{
-//    public class BSBarrierExplicit
-//    {
-//        private static void SetBoundaryCondition(
-//            int tNum,
-//            int xNum,
-//            double[,] pVArray,
-//            double boundaryPV,
-//            double strike,
-//            bool isCall)
-//        {
-//            for (int l = 0; l < tNum; l++)
-//            {
-//                int sign = isCall ? 1 : -1;
+namespace FDM
+{
+    public static class BSBarrierExplicit
+    {
+        private static void SetInitialCondition(
+            double[,] pVArray,
+            double boundaryPV,
+            double strike,
+            double barrier,
+            bool isCall)
+        {
+            int xNum = pVArray.GetLength(1);
 
-//                pVArray[l, 0] = 0;
-//                pVArray[l, xNum - 1] = Math.Max(sign * (((double)xNum - 1) / (double)xNum * boundaryPV - strike), 0);
-//            }
-//        }
-//        private static void SetInitialCondition(
-//            int xNum,
-//            double[,] pVArray,
-//            double boundaryPV,
-//            double strike,
-//            bool isCall)
-//        {
-//            for (int i = 1; i < xNum - 1; i++)
-//            {
-//                double initialPV = i * boundaryPV / xNum;
+            for (int i = 0; i < xNum; i++)
+            {
+                double initialPV = i * boundaryPV / xNum;
+                if (isCall && initialPV < barrier)
+                {
+                    pVArray[0, i] = Math.Max(initialPV - strike, 0);
+                }
+                else if (isCall == false && barrier < initialPV)
+                {
+                    pVArray[0, i] = Math.Max(strike - initialPV, 0);
+                }
+            }
+        }
 
-//                int sign = isCall ? 1 : -1;
+        private static void SetBoundaryCondition(
+            double[,] pVArray,
+            double boundaryPV,
+            double strike,
+            bool isCall)
+        {
+            int tNum = pVArray.GetLength(0);
+            int xNum = pVArray.GetLength(1);
 
-//                pVArray[0, i] = Math.Max(sign * (initialPV - strike), 0);
-//            }
-//        }
-//        public static double[,] CalculatePVArray(
-//            int xNum,
-//            int tNum,
-//            double boundaryPV,
-//            double strike,
-//            double boundaryTime,
-//            double domesticRate,
-//            double foreignRate,
-//            double volatility,
-//            bool isCall)
-//        {
-//            double[,] pVArray = new double[tNum, xNum];
+            for (int l = 1; l < tNum; l++)
+            {
+                int sign = isCall ? 1 : -1;
 
-//            SetBoundaryCondition(tNum, xNum, pVArray, boundaryPV, strike, isCall);
-//            SetInitialCondition(xNum, pVArray, boundaryPV, strike, isCall);
+                pVArray[l, 0] = 0;
+                pVArray[l, xNum - 1] = 0;
+            }
+        }
 
-//            double dx = boundaryPV / xNum;
-//            double dt = boundaryTime / tNum;
+        public static double[,] CalculatePVArray(
+            double[,] pVArray,
+            double boundaryPV,
+            double strike,
+            double barrier,
+            double boundaryTime,
+            double domesticRate,
+            double foreignRate,
+            double volatility,
+            bool isCall)
+        {
+            SetInitialCondition(pVArray, boundaryPV, strike, barrier, isCall);
+            SetBoundaryCondition(pVArray, boundaryPV, strike, isCall);
 
-//            for (int l = 1; l < tNum; l++)
-//            {
-//                for (int i = 1; i < xNum - 1; i++)
-//                {
-//                    double initialPV = i * boundaryPV / xNum;
+            int tNum = pVArray.GetLength(0);
+            int xNum = pVArray.GetLength(1);
 
-//                    double a1 = domesticRate * initialPV;
-//                    double b11 = 0.5 * volatility * volatility * initialPV * initialPV;
+            double dx = boundaryPV / xNum;
+            double dt = boundaryTime / tNum;
 
-//                    double a = b11 * dt / (dx * dx) - 0.5 * a1 * dt / dx;
-//                    double b = 1 + domesticRate * dt - 2 * b11 * dt / (dx * dx);
-//                    double c = b11 * dt / (dx * dx) + 0.5 * a1 * dt / dx;
+            for (int l = 1; l < tNum; l++)
+            {
+                for (int i = 1; i < xNum - 1; i++)
+                {
+                    double initialPV = i * boundaryPV / xNum;
 
-//                    pVArray[l, i] =
-//                        a * pVArray[l - 1, i - 1]
-//                        + b * pVArray[l - 1, i]
-//                        + c * pVArray[l - 1, i + 1];
-//                }
-//            }
-//            return pVArray;
-//        }
-//    }
-//}
+                    double a1 = (domesticRate - foreignRate) * initialPV;
+                    double b11 = 0.5 * volatility * volatility * initialPV * initialPV;
+
+                    double a = b11 * dt / (dx * dx) - 0.5 * a1 * dt / dx;
+                    double b = 1 + domesticRate * dt - 2 * b11 * dt / (dx * dx);
+                    double c = b11 * dt / (dx * dx) + 0.5 * a1 * dt / dx;
+
+                    pVArray[l, i] =
+                        a * pVArray[l - 1, i - 1]
+                        + b * pVArray[l - 1, i]
+                        + c * pVArray[l - 1, i + 1];
+                }
+            }
+            return pVArray;
+        }
+    }
+}

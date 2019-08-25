@@ -1,47 +1,42 @@
-using System;
 using Xunit;
 using FDM;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MathNet.Numerics.Distributions;
 
-namespace FDM.Tests
+namespace FDM
 {
-    public class BSVanillaPVTests
+    public class TestsBSVanilla
     {
-        private static readonly int tNum = 20;
-        private static readonly int xNum = 20;
-        private static readonly double boundaryPV = 200;
-        private static readonly double strike = 100;
-        private static readonly double boundaryTime = 0.2;
-        private static readonly double domesticRate = -1e-3;
-        private static readonly double foreignRate = 0.02;
-        private static readonly double volatility = 0.3;
+        private static readonly int tNum = Parameters.TNum;
+        private static readonly int xNum = Parameters.XNum;
+        private static readonly double boundaryPV = Parameters.BoundaryPV;
+        private static readonly double strike = Parameters.Strike;
+        private static readonly double boundaryTime = Parameters.BoundaryTime;
+        private static readonly double domesticRate = Parameters.DomesticRate;
+        private static readonly double foreignRate = Parameters.ForeignRate;
+        private static readonly double volatility = Parameters.Volatility;
 
         [Fact]
         public void BSVanillaTest()
         {
-            double tol = 1e-2;
             var isCall = true;
+            IsLowerThanTolerance(isCall);
 
-            double squareAbsoluteErrorSum = 0;
-            double squareAnalyticSum = 0;
-            double relativeErrorTotal = 0;
+            isCall = false;
+            IsLowerThanTolerance(isCall);
+        }
 
-            for (int l = 1; l < tNum; l++)
-            {
-                double maturity = l * boundaryTime / tNum;
+        public void IsLowerThanTolerance(bool isCall)
+        {
+            double tol = 1e-2;
 
-                for (int i = 1; i < xNum - 1; i++)
-                {
-                    double initialPV = i * boundaryPV / xNum;
-
-                    var pVAnalytic =
+            var pVAnalytic =
                         BSVanillaAnalytic.Make2DArray(
-                            xNum,
-                            tNum,
+                            new double[tNum, xNum],
                             boundaryPV,
                             strike,
                             boundaryTime,
@@ -50,24 +45,19 @@ namespace FDM.Tests
                             volatility,
                             isCall);
 
-                    var pVFDM =
-                        BSVanillaExplicit.CalculatePVArray(
-                            xNum,
-                            tNum,
-                            boundaryPV,
-                            strike,
-                            boundaryTime,
-                            domesticRate,
-                            foreignRate,
-                            volatility,
-                            isCall);
+            var pVFDM =
+                BSVanillaExplicit.CalculatePVArray(
+                    new double[tNum, xNum],
+                    boundaryPV,
+                    strike,
+                    boundaryTime,
+                    domesticRate,
+                    foreignRate,
+                    volatility,
+                    isCall);
 
-                    squareAbsoluteErrorSum += (pVAnalytic[l, i] - pVFDM[l, i]) * (pVAnalytic[l, i] - pVFDM[l, i]);
-                    squareAnalyticSum += pVAnalytic[l, i] * pVAnalytic[l, i];
-                }
-            }
-            relativeErrorTotal = Math.Sqrt(squareAbsoluteErrorSum / squareAnalyticSum);
-            Assert.True(relativeErrorTotal < tol ? true : false);
+            double error = CalculateError.ModifiedMeanRelative(pVFDM, pVAnalytic);
+            Assert.True(error < tol);
         }
     }
 }

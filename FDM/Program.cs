@@ -9,18 +9,20 @@ namespace FDM
 {
     class Program
     {
-        private static readonly int tNum = 20;
-        private static readonly int xNum = 20;
-        private static readonly double boundaryPV = 200;
-        private static readonly double strike = 100;
-        private static readonly double boundaryTime = 0.1;
-        private static readonly double domesticRate = 0.1;
-        private static readonly double foreignRate = 0.0;
-        private static readonly double volatility = 0.3;
-        private static readonly bool isCall = true;
+        private static readonly int tNum = Parameters.TNum;
+        private static readonly int xNum = Parameters.XNum;
+        private static readonly double boundaryPV = Parameters.BoundaryPV;
+        private static readonly double strike = Parameters.Strike;
+        private static readonly double boundaryTime = Parameters.BoundaryTime;
+        private static readonly double domesticRate = Parameters.DomesticRate;
+        private static readonly double foreignRate = Parameters.ForeignRate;
+        private static readonly double volatility = Parameters.Volatility;
 
         static void Main(string[] args)
         {
+            double barrier = strike + 50;
+            bool isCall = true;
+
             var tIndex = new double[tNum];
             var xIndex = new double[xNum];
 
@@ -35,44 +37,48 @@ namespace FDM
 
             var fileExplicit =
                 new StreamWriter(
-                    @"/Users/hiromichi/Desktop/official/job/advanced/data/BSVanillaExplicit.csv",
+                    @"S:\GR6795\GR6795_41002\90_個人\行員\猪苗代\training\advanced\data\BSBarrier\Explicit.csv",
                     false,
                     Encoding.UTF8);
 
-            var bSVanillaExplicitPV =
-                BSVanillaExplicit.CalculatePVArray(
-                    tNum,
-                    xNum,
+            var pVArray = new double[tNum, xNum];
+
+            var bSBarrierExplicitPV =
+                BSBarrierExplicit.CalculatePVArray(
+                    pVArray,
                     boundaryPV,
                     strike,
+                    barrier,
                     boundaryTime,
                     domesticRate,
                     foreignRate,
                     volatility,
                     isCall);
 
-            FileUtils.CSVWriter(fileExplicit, bSVanillaExplicitPV, tIndex, xIndex);
+            CSVWriter.Write2D(fileExplicit, bSBarrierExplicitPV, tIndex, xIndex);
 
 
             var fileAnalytic =
                 new StreamWriter(
-                    @"/Users/hiromichi/Desktop/official/job/advanced/data/BSVanillaAnalytic.csv",
+                    @"S:\GR6795\GR6795_41002\90_個人\行員\猪苗代\training\advanced\data\BSBarrier\Analytic.csv",
                     false,
                     Encoding.UTF8);
 
-            var bSVanillaAnalyticPV =
-                BSVanillaAnalytic.Make2DArray(
-                    tNum,
-                    xNum,
+            pVArray = new double[tNum, xNum];
+
+            var bSBarrierAnalyticPV =
+                BSBarrierAnalytic.Make2DArray(
+                    pVArray,
                     boundaryPV,
                     strike,
+                    barrier,
                     boundaryTime,
                     domesticRate,
                     foreignRate,
                     volatility,
                     isCall);
 
-            FileUtils.CSVWriter(fileAnalytic, bSVanillaAnalyticPV, tIndex, xIndex);
+            CSVWriter.Write2D(fileAnalytic, bSBarrierAnalyticPV, tIndex, xIndex);
         }
     }
 }

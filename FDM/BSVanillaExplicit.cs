@@ -8,31 +8,15 @@ namespace FDM
 {
     public static class BSVanillaExplicit
     {
-        private static void SetBoundaryCondition(
-            int tNum,
-            int xNum,
-            double[,] pVArray,
-            double boundaryPV,
-            double strike,
-            bool isCall)
-        {
-            for (int l = 0; l < tNum; l++)
-            {
-                int sign = isCall ? 1 : -1;
-
-                pVArray[l, 0] = 0;
-                pVArray[l, xNum - 1] = Math.Max(sign * (((double)xNum - 1) / (double)xNum * boundaryPV - strike), 0);
-            }
-        }
-
         private static void SetInitialCondition(
-            int xNum,
             double[,] pVArray,
             double boundaryPV,
             double strike,
             bool isCall)
         {
-            for (int i = 1; i < xNum - 1; i++)
+            int xNum = pVArray.GetLength(1);
+
+            for (int i = 0; i < xNum; i++)
             {
                 double initialPV = i * boundaryPV / xNum;
 
@@ -42,9 +26,25 @@ namespace FDM
             }
         }
 
+        private static void SetBoundaryCondition(
+            double[,] pVArray,
+            double boundaryPV,
+            double strike,
+            bool isCall)
+        {
+            int tNum = pVArray.GetLength(0);
+            int xNum = pVArray.GetLength(1);
+
+            for (int l = 1; l < tNum; l++)
+            {
+                pVArray[l, 0] = isCall ? 0 : strike;
+                pVArray[l, xNum - 1] =
+                    isCall ? Math.Max(((double)xNum - 1) / (double)xNum * boundaryPV - strike, 0) : 0;
+            }
+        }
+
         public static double[,] CalculatePVArray(
-            int xNum,
-            int tNum,
+            double[,] pVArray,
             double boundaryPV,
             double strike,
             double boundaryTime,
@@ -53,10 +53,11 @@ namespace FDM
             double volatility,
             bool isCall)
         {
-            double[,] pVArray = new double[tNum, xNum];
+            int tNum = pVArray.GetLength(0);
+            int xNum = pVArray.GetLength(1);
 
-            SetBoundaryCondition(tNum, xNum, pVArray, boundaryPV, strike, isCall);
-            SetInitialCondition(xNum, pVArray, boundaryPV, strike, isCall);
+            SetInitialCondition(pVArray, boundaryPV, strike, isCall);
+            SetBoundaryCondition(pVArray, boundaryPV, strike, isCall);
 
             double dx = boundaryPV / xNum;
             double dt = boundaryTime / tNum;
