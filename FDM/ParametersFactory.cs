@@ -1,13 +1,23 @@
 ﻿using System;
+
 namespace FDM
 {
-    public class ParametersFactory : Parameters
+    public static class ParametersFactory
     {
-        Parameters parameters = new Parameters();
-        
-        public ParametersFactory()
+        public static Parameters DefaultParameters()
         {
-            int tNum = parameters.TNum;
+            //tNum,
+            //xNum,
+            //maturity,
+            //boundaryPrice,
+            //strike,
+            //domesticRate,
+            //foreignRate,
+            //volatility
+
+            var parameters = new Parameters(20, 400, 0.1, 400, 100, 0, 2e-2, 0.1);
+
+            return parameters;
         }
     }
 }

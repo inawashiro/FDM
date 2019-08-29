@@ -12,13 +12,13 @@ namespace FDM
         private static void SetInitialCondition(
             int xNum,
             double[,] pVArray,
-            double boundaryPV,
+            double boundaryPrice,
             double strike,
             bool isCall)
         {
             for (int i = 0; i < xNum; i++)
             {
-                double initialPV = i * boundaryPV / xNum;
+                double initialPV = i * boundaryPrice / xNum;
 
                 int sign = isCall ? 1 : -1;
 
@@ -52,7 +52,7 @@ namespace FDM
 
         public static double[,] Make2DArray(
             double[,] pVArray,
-            double boundaryPV,
+            double boundaryPrice,
             double strike,
             double boundaryTime,
             double domesticRate,
@@ -63,7 +63,7 @@ namespace FDM
             int tNum = pVArray.GetLength(0);
             int xNum = pVArray.GetLength(1);
 
-            SetInitialCondition(xNum, pVArray, boundaryPV, strike, isCall);
+            SetInitialCondition(xNum, pVArray, boundaryPrice, strike, isCall);
 
             for (int l = 1; l < tNum; l++)
             {
@@ -71,7 +71,7 @@ namespace FDM
 
                 for (int i = 0; i < xNum; i++)
                 {
-                    double initialPV = i * boundaryPV / xNum;
+                    double initialPV = i * boundaryPrice / xNum;
 
                     pVArray[l, i] =
                         CalculatePV(
