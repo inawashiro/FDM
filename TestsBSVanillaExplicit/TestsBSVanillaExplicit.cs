@@ -11,7 +11,7 @@ namespace FDM
 {
     public class TestsBSVanillaExplicit
     {
-        private static readonly Parameters parameters = ParametersFactory.DefaultParameters();
+        private static readonly Parameters parameters = ParametersFactory.DefaultParameters(Types.OptionType.Vanilla);
         
         [Fact]
         public void BSVanillaExplicitTest()

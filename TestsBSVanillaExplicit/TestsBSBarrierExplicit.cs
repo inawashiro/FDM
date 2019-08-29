@@ -11,7 +11,7 @@ namespace FDM
 {
     public class TestsBSBarrierExplicit
     {
-        private static readonly Parameters parameters = ParametersFactory.DefaultParameters();
+        private static readonly Parameters parameters = ParametersFactory.DefaultParameters(Types.OptionType.Barrier);
         
         [Fact]
         public void BSBarrierExplicitTest()

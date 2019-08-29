@@ -7,9 +7,9 @@ namespace FDM
         public Parameters(
             int tNum,
             int xNum,
+            double maturity,
             double boundaryPrice,
             double strike,
-            double maturity,
             double domesticRate,
             double foreignRate,
             double volatility)

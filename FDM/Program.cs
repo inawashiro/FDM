@@ -9,11 +9,11 @@ namespace FDM
 {
     class Program
     {
-        private static readonly Parameters parameters = ParametersFactory.DefaultParameters();
+        private static readonly Parameters parameters = ParametersFactory.DefaultParameters(Types.OptionType.Barrier);
 
         static void Main(string[] args)
         {
-            double barrier = parameters.Strike + 50;
+            double barrier = parameters.Strike * 1.1;
             bool isCall = true;
 
             var tIndex = new double[parameters.TNum];
@@ -30,7 +30,7 @@ namespace FDM
 
             var fileExplicit =
                 new StreamWriter(
-                    @"S:\GR6795\GR6795_41002\90_個人\行員\猪苗代\training\advanced\data\BSBarrier\Explicit.csv",
+                    @"/Users/hiromichi/Desktop/official/job/advanced/data/BS/Barrier/Explicit.csv",
                     false,
                     Encoding.UTF8);
 
@@ -49,9 +49,30 @@ namespace FDM
             CSVWriter.Write2D(fileExplicit, bSBarrierExplicitPV, tIndex, xIndex);
 
 
+            var fileImplicit =
+                new StreamWriter(
+                    @"/Users/hiromichi/Desktop/official/job/advanced/data/BS/Barrier/Implicit.csv",
+                    false,
+                    Encoding.UTF8);
+
+            var bSBarrierImplicitPV =
+                BSBarrierImplicit.CalculatePVArray(
+                    new double[parameters.TNum, parameters.XNum],
+                    parameters.BoundaryPrice,
+                    parameters.Strike,
+                    parameters.Maturity,
+                    parameters.DomesticRate,
+                    parameters.ForeignRate,
+                    parameters.Volatility,
+                    barrier,
+                    isCall);
+
+            CSVWriter.Write2D(fileImplicit, bSBarrierImplicitPV, tIndex, xIndex);
+
+
             var fileAnalytic =
                 new StreamWriter(
-                    @"S:\GR6795\GR6795_41002\90_個人\行員\猪苗代\training\advanced\data\BSBarrier\Analytic.csv",
+                    @"/Users/hiromichi/Desktop/official/job/advanced/data/BS/Barrier/Analytic.csv",
                     false,
                     Encoding.UTF8);
 
