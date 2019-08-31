@@ -12,7 +12,7 @@ namespace FDM
         //Considering only Up-Out type
         private static void SetInitialCondition(
             double[,] pVArray,
-            double boundaryPV,
+            double boundaryPrice,
             double strike,
             double barrier,
             bool isCall)
@@ -20,7 +20,7 @@ namespace FDM
             int xNum = pVArray.GetLength(1);
             for (int i = 0; i < xNum; i++)
             {
-                double initialPV = i * boundaryPV / xNum;
+                double initialPV = i * boundaryPrice / xNum;
 
                 if (isCall && initialPV < barrier)
                 {
@@ -36,11 +36,11 @@ namespace FDM
         private static double CalculatePV(
             double initialPV,
             double strike,
-            double barrier,
             double maturity,
             double domesticRate,
             double foreignRate,
             double volatility,
+            double barrier,
             bool isCall)
         {
             int sign = isCall ? 1 : -1;
@@ -62,37 +62,37 @@ namespace FDM
 
         public static double[,] Make2DArray(
             double[,] pVArray,
-            double boundaryPV,
+            double boundaryPrice,
             double strike,
-            double barrier,
-            double boundaryTime,
+            double maturity,
             double domesticRate,
             double foreignRate,
             double volatility,
+            double barrier,
             bool isCall)
         {
-            SetInitialCondition(pVArray, boundaryPV, strike, barrier, isCall);
+            SetInitialCondition(pVArray, boundaryPrice, strike, barrier, isCall);
 
             int tNum = pVArray.GetLength(0);
             int xNum = pVArray.GetLength(1);
 
             for (int l = 1; l < tNum; l++)
             {
-                double maturity = l * boundaryTime / tNum;
+                double subMaturity = l * maturity / tNum;
 
                 for (int i = 0; i < xNum; i++)
                 {
-                    double initialPV = i * boundaryPV / xNum;
+                    double initialPV = i * boundaryPrice / xNum;
 
                     pVArray[l, i] =
                         CalculatePV(
                             initialPV,
                             strike,
-                            barrier,
-                            maturity,
+                            subMaturity,
                             domesticRate,
                             foreignRate,
                             volatility,
+                            barrier,
                             isCall);
                 }
             }

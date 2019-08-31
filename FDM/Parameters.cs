@@ -4,34 +4,33 @@ namespace FDM
 {
     public class Parameters
     {
-        private int tNum;
-        private int xNum;
-        private double boundaryPV;
-        private double strike;
-        private double boundaryTime;
-        private double domesticRate;
-        private double foreignRate;
-        private double volatility;
-
-        public Parameters()
+        public Parameters(
+            int tNum,
+            int xNum,
+            double maturity,
+            double boundaryPrice,
+            double strike,
+            double domesticRate,
+            double foreignRate,
+            double volatility)
         {
-            this.tNum = TNum;
-            this.xNum = XNum;
-            this.boundaryPV = BoundaryPV;
-            this.strike = Strike;
-            this.boundaryTime = BoundaryTime;
-            this.domesticRate = DomesticRate;
-            this.foreignRate = ForeignRate;
-            this.volatility = Volatility;
+            TNum = tNum;
+            XNum = xNum;
+            Maturity = maturity;
+            BoundaryPrice = boundaryPrice;
+            Strike = strike;
+            DomesticRate = domesticRate;
+            ForeignRate = foreignRate;
+            Volatility = volatility;
         }
         
-        public static int TNum { get { return 20; } }
-        public static int XNum { get { return 40; } }
-        public static double BoundaryPV { get { return 400; } }
-        public static double Strike { get { return 100; } }
-        public static double BoundaryTime { get { return 0.2; } }
-        public static double DomesticRate { get { return -1.5e-3; } }
-        public static double ForeignRate { get { return 2e-2; } }
-        public static double Volatility { get { return 0.3; } }
+        public int TNum { set; get; }
+        public int XNum { set; get; }
+        public double Maturity { set; get; }
+        public double BoundaryPrice { set; get; }
+        public double Strike { set; get; }
+        public double DomesticRate { set; get; }
+        public double ForeignRate { set; get; }
+        public double Volatility { set; get; }
     }
 }

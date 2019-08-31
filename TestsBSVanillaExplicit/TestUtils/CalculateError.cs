@@ -10,19 +10,17 @@ namespace FDM
 {
     public class CalculateError
     {
-        public static double ModifiedMeanRelative(double[,] pVFDM, double[,] pVAnalytic)
+        public static double MaxAbsoluteError(double[,] pVFDM, double[,] pVAnalytic)
         {
-            double modifiedRelativeErrorSquareSum = 0;
             int tNum = pVAnalytic.GetLength(0);
             int xNum = pVFDM.GetLength(1);
+            var absoluteErrorArray = new double[xNum];
 
-            double epsilon = 1e-1;
             for (int i = 0; i < xNum; i++)
             {
-                double modifiedRelativeError = (pVFDM[tNum - 1, i] - pVAnalytic[tNum - 1, i]) / (pVAnalytic[tNum - 1, i] + epsilon);
-                modifiedRelativeErrorSquareSum += modifiedRelativeError * modifiedRelativeError;
+                absoluteErrorArray[i] = Math.Abs(pVFDM[tNum - 1, i] - pVAnalytic[tNum - 1, i]);
             }
-            return Math.Sqrt(modifiedRelativeErrorSquareSum) /xNum;
+            return absoluteErrorArray.Max();
         }
     }
 }
