@@ -1,4 +1,4 @@
-using Xunit;
+﻿using Xunit;
 using FDM;
 using System;
 using System.Collections.Generic;
@@ -9,26 +9,28 @@ using MathNet.Numerics.Distributions;
 
 namespace FDM
 {
-    public class TestsBSVanillaImplicit
+    public class TestBSBarrierExplicit
     {
-        private static readonly Parameters parameters = ParametersFactory.DefaultParameters(Types.OptionType.Vanilla);
-
+        private static readonly Parameters parameters = ParametersFactory.DefaultParameters(Types.OptionType.Barrier);
+        
         [Fact]
-        public void BSVanillaImplicitTest()
+        public void BSBarrierExplicitTest()
         {
             var isCall = true;
-            IsLowerThanTolerance(isCall);
+            double barrier = parameters.Strike * 1.2;
+            IsLowerThanTolerance(isCall, barrier);
 
             isCall = false;
-            IsLowerThanTolerance(isCall);
+            barrier = parameters.Strike * 0.8;
+            IsLowerThanTolerance(isCall, barrier);
         }
 
-        public void IsLowerThanTolerance(bool isCall)
+        public void IsLowerThanTolerance(bool isCall, double barrier)
         {
-            double tol = 1e-1;
+            double tol = 1e-2;
 
             var pVAnalytic =
-                        BSVanillaAnalytic.Make2DArray(
+                        BSBarrierAnalytic.Make2DArray(
                             new double[parameters.TNum, parameters.XNum],
                             parameters.BoundaryPrice,
                             parameters.Strike,
@@ -36,10 +38,11 @@ namespace FDM
                             parameters.DomesticRate,
                             parameters.ForeignRate,
                             parameters.Volatility,
+                            barrier,
                             isCall);
 
             var pVFDM =
-                BSVanillaImplicit.CalculatePVArray(
+                BSBarrierExplicit.CalculatePVArray(
                     new double[parameters.TNum, parameters.XNum],
                     parameters.BoundaryPrice,
                     parameters.Strike,
@@ -47,10 +50,11 @@ namespace FDM
                     parameters.DomesticRate,
                     parameters.ForeignRate,
                     parameters.Volatility,
+                    barrier,
                     isCall);
 
             double error = CalculateError.MaxAbsoluteError(pVFDM, pVAnalytic);
-            Assert.True(error < tol);
+            Assert.Equal(error, tol);
         }
     }
 }

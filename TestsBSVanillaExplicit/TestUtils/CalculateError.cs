@@ -16,7 +16,7 @@ namespace FDM
             int xNum = pVFDM.GetLength(1);
             var absoluteErrorArray = new double[xNum];
 
-            for (int i = 0; i < xNum; i++)
+            for (int i = (int)(0.1 * xNum); i < (int)(0.9 * xNum); i++)
             {
                 absoluteErrorArray[i] = Math.Abs(pVFDM[tNum - 1, i] - pVAnalytic[tNum - 1, i]);
             }

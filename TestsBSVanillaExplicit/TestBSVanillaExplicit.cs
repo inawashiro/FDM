@@ -9,7 +9,7 @@ using MathNet.Numerics.Distributions;
 
 namespace FDM
 {
-    public class TestsBSVanillaExplicit
+    public class TestBSVanillaExplicit
     {
         private static readonly Parameters parameters = ParametersFactory.DefaultParameters(Types.OptionType.Vanilla);
         
@@ -25,7 +25,7 @@ namespace FDM
 
         public void IsLowerThanTolerance(bool isCall)
         {
-            double tol = 1e-1;
+            double tol = 1e-2;
 
             var pVAnalytic =
                         BSVanillaAnalytic.Make2DArray(
@@ -50,7 +50,7 @@ namespace FDM
                     isCall);
 
             double error = CalculateError.MaxAbsoluteError(pVFDM, pVAnalytic);
-            Assert.True(error < tol);
+            Assert.Equal(error, tol);
         }
     }
 }
