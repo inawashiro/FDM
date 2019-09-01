@@ -97,6 +97,9 @@ namespace FDM
             int tNum = pVArray.GetLength(0);
             int xNum = pVArray.GetLength(1);
 
+            double dx = boundaryPrice / xNum;
+            double dt = maturity / tNum;
+
             SetInitialCondition(pVArray, boundaryPrice, strike, isCall);
             SetBoundaryCondition(pVArray, boundaryPrice, strike, isCall);
 
@@ -113,12 +116,30 @@ namespace FDM
                         isCall));
             var vector =
                 Vector<double>.Build.Dense(xNum, i => pVArray[0, i]);
+
+            var pVArrayTmp = new double[tNum, xNum];
+
             for (int l = 1; l < tNum; l++)
             {
                 vector = coefficientMatrix.Solve(vector);
-                for (int i = 0; i < xNum; i++)
+                for (int i = 1; i < xNum - 1; i++)
                 {
-                    pVArray[l, i] = vector[i];
+                    pVArrayTmp[l, i] = vector[i];
+
+                    double initialPV = i * boundaryPrice / xNum;
+
+                    double a1 = (domesticRate - foreignRate) * initialPV;
+                    double b11 = 0.5 * volatility * volatility * initialPV * initialPV;
+                    double f = -domesticRate;
+
+                    double a = b11 * dt / (dx * dx) - 0.5 * a1 * dt / dx;
+                    double b = 1 + f * dt - 2 * b11 * dt / (dx * dx);
+                    double c = b11 * dt / (dx * dx) + 0.5 * a1 * dt / dx;
+
+                    pVArray[l, i] =
+                        a * pVArrayTmp[l - 1, i - 1]
+                        + b * pVArrayTmp[l - 1, i]
+                        + c * pVArrayTmp[l - 1, i + 1];
                 }
             }
             return pVArray;
