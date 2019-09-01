@@ -9,12 +9,12 @@ using MathNet.Numerics.Distributions;
 
 namespace FDM
 {
-    public class TestsBSVanillaImplicit
+    public class TestBSVanillaCrankNicolson
     {
         private static readonly Parameters parameters = ParametersFactory.DefaultParameters(Types.OptionType.Vanilla);
 
         [Fact]
-        public void BSVanillaImplicitTest()
+        public void BSVanillaCrankNicolsonTest()
         {
             var isCall = true;
             IsLowerThanTolerance(isCall);
@@ -25,7 +25,7 @@ namespace FDM
 
         public void IsLowerThanTolerance(bool isCall)
         {
-            double tol = 1e-1;
+            double tol = 1e-2;
 
             var pVAnalytic =
                         BSVanillaAnalytic.Make2DArray(
@@ -39,7 +39,7 @@ namespace FDM
                             isCall);
 
             var pVFDM =
-                BSVanillaImplicit.CalculatePVArray(
+                BSVanillaCrankNicolson.CalculatePVArray(
                     new double[parameters.TNum, parameters.XNum],
                     parameters.BoundaryPrice,
                     parameters.Strike,
@@ -50,7 +50,7 @@ namespace FDM
                     isCall);
 
             double error = CalculateError.MaxAbsoluteError(pVFDM, pVAnalytic);
-            Assert.True(error < tol);
+            Assert.Equal(error, tol);
         }
     }
 }
