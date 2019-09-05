@@ -2,7 +2,7 @@
 
 namespace FDM
 {
-    public class NewMethodTheta
+    public class MethodTheta
     {
         public static double[,] CalculatePVArray(
             Types.MethodType methodType,

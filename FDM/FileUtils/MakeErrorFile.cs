@@ -3,7 +3,7 @@ using System.IO;
 
 namespace FDM
 {
-    class MakeErrorFile
+    public static class MakeErrorFile
     {
         public static void Complete()
         {
@@ -46,7 +46,7 @@ namespace FDM
             file.WriteLine();
         }
 
-        public static void WriteError(StreamWriter file, Types.OptionType optionType, Types.MethodType methodType)
+        private static void WriteError(StreamWriter file, Types.OptionType optionType, Types.MethodType methodType)
         {
             var parameters = ParametersFactory.ForConvergenceTests(optionType);
             var xNumArray = ParametersFactory.MakeXNumArray();
