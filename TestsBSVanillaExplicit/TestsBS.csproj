@@ -16,6 +16,6 @@
     <ProjectReference Include="..\FDM\FDM.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="TestUtils\" />
+    <Compile Remove="TestUtils\CalculateError.cs" />
   </ItemGroup>
 </Project>

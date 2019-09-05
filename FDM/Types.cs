@@ -9,5 +9,13 @@ namespace FDM
             Vanilla,
             Barrier
         }
+
+        public enum MethodType
+        {
+            Analytic,
+            Explicit,
+            Implicit,
+            CrankNicolson
+        }
     }
 }
