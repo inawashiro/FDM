@@ -1,55 +1,20 @@
 using Xunit;
-using FDM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MathNet.Numerics.Distributions;
 
 namespace FDM
 {
     public class TestBSVanillaCrankNicolson
     {
-        private static readonly Parameters parameters = ParametersFactory.DefaultParameters(Types.OptionType.Vanilla);
-
         [Fact]
         public void BSVanillaCrankNicolsonTest()
         {
-            var isCall = true;
-            IsLowerThanTolerance(isCall);
+            Parameters parameters = ParametersFactory.ForUnitTests(Types.OptionType.Vanilla);
 
-            isCall = false;
-            IsLowerThanTolerance(isCall);
-        }
+            double tol = 1e-3;
+            var makePVArray = new MakePVArray();
+            var analyticArray = makePVArray.Make(parameters, Types.OptionType.Vanilla, Types.MethodType.Analytic);
+            var fDMArray = makePVArray.Make(parameters, Types.OptionType.Vanilla, Types.MethodType.CrankNicolson);
+            double error = CalculateError.MaxAbsoluteError(fDMArray, analyticArray);
 
-        public void IsLowerThanTolerance(bool isCall)
-        {
-            double tol = 1e-2;
-
-            var pVAnalytic =
-                        BSVanillaAnalytic.Make2DArray(
-                            new double[parameters.TNum, parameters.XNum],
-                            parameters.BoundaryPrice,
-                            parameters.Strike,
-                            parameters.Maturity,
-                            parameters.DomesticRate,
-                            parameters.ForeignRate,
-                            parameters.Volatility,
-                            isCall);
-
-            var pVFDM =
-                BSVanillaCrankNicolson.CalculatePVArray(
-                    new double[parameters.TNum, parameters.XNum],
-                    parameters.BoundaryPrice,
-                    parameters.Strike,
-                    parameters.Maturity,
-                    parameters.DomesticRate,
-                    parameters.ForeignRate,
-                    parameters.Volatility,
-                    isCall);
-
-            double error = CalculateError.MaxAbsoluteError(pVFDM, pVAnalytic);
             Assert.Equal(error, tol);
         }
     }

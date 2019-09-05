@@ -25,6 +25,17 @@
     <Compile Remove="BSOptionValueCalculatorFactory.cs" />
     <Compile Remove="IOptionValueCalculator.cs" />
     <Compile Remove="IParameters.cs" />
+    <Compile Remove="NewMethodImplicit.cs" />
+    <Compile Remove="BSBarrierAnalytic.cs" />
+    <Compile Remove="BSBarrierCrankNicolson.cs" />
+    <Compile Remove="BSBarrierExplicit.cs" />
+    <Compile Remove="BSVanillaImplicit.cs" />
+    <Compile Remove="BSVanillaCrankNicolson.cs" />
+    <Compile Remove="BSVanillaExplicit.cs" />
+    <Compile Remove="EmptyClass.cs" />
+    <Compile Remove="BSBarrierImplicit.cs" />
+    <Compile Remove="BSVanillaAnalytic.cs" />
+    <Compile Remove="CalculateError.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MathNet.Numerics" Version="4.8.1" />
