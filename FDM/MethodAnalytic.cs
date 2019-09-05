@@ -3,7 +3,7 @@ using MathNet.Numerics.Distributions;
 
 namespace FDM
 {
-    public class NewMethodAnalytic
+    public class MethodAnalytic
     {
         private static double CalculatePV(
             Types.OptionType optionType,

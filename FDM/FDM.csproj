@@ -36,6 +36,8 @@
     <Compile Remove="BSBarrierImplicit.cs" />
     <Compile Remove="BSVanillaAnalytic.cs" />
     <Compile Remove="CalculateError.cs" />
+    <Compile Remove="IOptionValueCalculator.cs" />
+    <Compile Remove="IParameters.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MathNet.Numerics" Version="4.8.1" />
