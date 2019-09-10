@@ -7,15 +7,16 @@ namespace FDM
         public enum OptionType
         {
             Vanilla,
-            Barrier
+            Barrier,
+            Exchange
         }
 
         public enum MethodType
         {
-            Analytic,
             Explicit,
             Implicit,
-            CrankNicolson
+            CrankNicolson,
+            ADI
         }
     }
 }

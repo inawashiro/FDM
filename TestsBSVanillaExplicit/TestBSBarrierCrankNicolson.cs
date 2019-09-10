@@ -7,15 +7,10 @@ namespace FDM
         [Fact]
         public void BSBarrierCrankNicolsonTest()
         {
-            Parameters parameters = ParametersFactory.ForUnitTests(Types.OptionType.Barrier);
+            var optionType = Types.OptionType.Barrier;
+            var methodType = Types.MethodType.CrankNicolson;
 
-            double tol = 1e-3;
-            var makePVArray = new MakePVArray();
-            var analyticArray = makePVArray.Make(parameters, Types.OptionType.Barrier, Types.MethodType.Analytic);
-            var fDMArray = makePVArray.Make(parameters, Types.OptionType.Barrier, Types.MethodType.CrankNicolson);
-            double error = CalculateError.MaxAbsoluteError(fDMArray, analyticArray);
-
-            Assert.Equal(error, tol);
+            TestError.Test(optionType, methodType);
         }
     }
 }
