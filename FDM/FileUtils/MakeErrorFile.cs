@@ -57,9 +57,9 @@ namespace FDM
             {
                 var makePVArray = new MakePVArray();
                 var analyticArray =
-                    makePVArray.Make(parameters[j], optionType, Types.MethodType.Analytic);
+                    makePVArray.Analytic(parameters[j], optionType);
                 var fDMArray =
-                    makePVArray.Make(parameters[j], optionType, methodType);
+                    makePVArray.FDM(parameters[j], optionType, methodType);
                 double error = CalculateError.MaxAbsoluteError(fDMArray, analyticArray);
 
                 file.Write(error + ",");
