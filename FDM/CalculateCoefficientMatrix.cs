@@ -22,15 +22,19 @@ namespace FDM
             var coefficientArray = new double[xNum, xNum];
             double theta = DefineTheta.Define(methodType);
 
+            double a1 = domesticRate - foreignRate - 0.5 * volatility * volatility;
+            double b11 = 0.5 * volatility * volatility;
+            double f = -domesticRate;
+
             coefficientArray[0, 0] = 1;
             coefficientArray[0, 1] = 0;
             for (int i = 1; i < xNum - 1; i++)
             {
-                double initialPV = i * boundaryPrice / xNum;
+                //double initialPV = i * boundaryPrice / xNum;
 
-                double a1 = (domesticRate - foreignRate) * initialPV;
-                double b11 = 0.5 * volatility * volatility * initialPV * initialPV;
-                double f = -domesticRate;
+                //double a1 = (domesticRate - foreignRate) * initialPV;
+                //double b11 = 0.5 * volatility * volatility * initialPV * initialPV;
+                //double f = -domesticRate;
 
                 double a = (1 - theta) * dt * (b11 / (dx * dx) - 0.5 * a1 / dx);
                 double b = 1 + (1 - theta) * dt * (f - 2 * b11 / (dx * dx));
@@ -64,15 +68,19 @@ namespace FDM
             var coefficientArray = new double[xNum, xNum];
             double theta = DefineTheta.Define(methodType);
 
+            double a1 = domesticRate - foreignRate - 0.5 * volatility * volatility;
+            double b11 = 0.5 * volatility * volatility;
+            double f = -domesticRate;
+
             coefficientArray[0, 0] = 1;
             coefficientArray[0, 1] = 0;
             for (int i = 1; i < xNum - 1; i++)
             {
-                double initialPV = i * boundaryPrice / xNum;
+                //double initialPV = i * boundaryPrice / xNum;
 
-                double a1 = (domesticRate - foreignRate) * initialPV;
-                double b11 = 0.5 * volatility * volatility * initialPV * initialPV;
-                double f = -domesticRate;
+                //double a1 = (domesticRate - foreignRate) * initialPV;
+                //double b11 = 0.5 * volatility * volatility * initialPV * initialPV;
+                //double f = -domesticRate;
 
                 double a = theta * dt * (-b11 / (dx * dx) + 0.5 * a1 / dx);
                 double b = 1 + theta * dt * (f + 2 * b11 / (dx * dx));
