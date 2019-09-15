@@ -4,7 +4,7 @@ namespace FDM
 {
     public static class ParametersFactory
     {
-        public static Parameters ForUnitTests(Types.OptionType optionType)
+        public static Parameters Original(Types.OptionType optionType)
         {
             // tNum,
             // xNum,
@@ -19,38 +19,57 @@ namespace FDM
 
             var parameters =
                 optionType == Types.OptionType.Vanilla ?
-                new Parameters(10, 200, 0.1, Math.Log(200), 100, 0, 2e-2, 0.1, true) :
-                new Parameters(10, 200, 0.1, Math.Log(200), 100, 0, 2e-2, 0.1, 120, true);
+                new Parameters(10, 100, 0.2, 200, 100, 0, 2e-2, 0.1, true) :
+                new Parameters(10, 200, 0.1, 200, 100, 0, 2e-2, 0.1, 110, true);
 
             return parameters;
         }
 
         public static int[] MakeXNumArray()
         {
-            int xNumNum = 6;
-            var xNumArray = new int[6];
+            int xNumNum = 5;
+            var xNumArray = new int[xNumNum];
             for (int j = 0; j < xNumNum; j++)
             {
-                xNumArray[j] = 16 * (int)Math.Pow(2, j);
+                xNumArray[j] = 25 * (int)Math.Pow(2, j);
             }
             return xNumArray;
         }
 
-        public static Parameters[] ForConvergenceTests(Types.OptionType optionType)
+        public static Parameters[] ForVerification(Types.OptionType optionType)
         {
             var xNumArray = MakeXNumArray();
             int xNumNum = xNumArray.GetLength(0);
-            var parameters = new Parameters[xNumNum];
+            var parameters = Original(optionType);
+            var parametersArray = new Parameters[xNumNum];
 
             for (int j = 0; j < xNumNum; j++)
             {
-                parameters[j] =
+                parametersArray[j] =
                     optionType == Types.OptionType.Vanilla ?
-                        new Parameters(10, xNumArray[j], 0.1, 200, 100, 0, 2e-2, 0.1, true) :
-                        new Parameters(10, xNumArray[j], 0.1, 200, 100, 0, 2e-2, 0.1, 120, true);
-
+                        new Parameters(
+                            parameters.TNum,
+                            xNumArray[j],
+                            parameters.Maturity,
+                            parameters.BoundaryPrice,
+                            parameters.Strike,
+                            parameters.DomesticRate,
+                            parameters.ForeignRate,
+                            parameters.Volatility,
+                            parameters.IsCall) :
+                        new Parameters(
+                            parameters.TNum,
+                            xNumArray[j],
+                            parameters.Maturity,
+                            parameters.BoundaryPrice,
+                            parameters.Strike,
+                            parameters.DomesticRate,
+                            parameters.ForeignRate,
+                            parameters.Volatility,
+                            parameters.Barrier,
+                            parameters.IsCall);
             }
-            return parameters;
+            return parametersArray;
         }
     }
 }

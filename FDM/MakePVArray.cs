@@ -78,11 +78,8 @@
                         parameters.Barrier,
                         parameters.IsCall);
 
-                    OptionVanilla.SetBoundaryCondition(
-                        pVArray,
-                        parameters.BoundaryPrice,
-                        parameters.Strike,
-                        parameters.IsCall);
+                    OptionBarrier.SetBoundaryCondition(
+                        pVArray);
 
                     pVArray =
                         MethodTheta.CalculatePVArray(

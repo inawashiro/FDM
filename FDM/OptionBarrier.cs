@@ -17,7 +17,7 @@ namespace FDM
             for (int i = 0; i < xNum; i++)
             {
                 double dx = boundaryPrice / xNum;
-                double initialPrice = Math.Exp(i * dx);
+                double initialPrice = i * dx;
 
                 if (isCall && initialPrice < barrier)
                 {
@@ -31,18 +31,13 @@ namespace FDM
         }
 
         public static void SetBoundaryCondition(
-            double[,] pVArray,
-            double boundaryPrice,
-            double strike,
-            bool isCall)
+            double[,] pVArray)
         {
             int tNum = pVArray.GetLength(0);
             int xNum = pVArray.GetLength(1);
 
             for (int l = 1; l < tNum; l++)
             {
-                int sign = isCall ? 1 : -1;
-
                 pVArray[l, 0] = 0;
                 pVArray[l, xNum - 1] = 0;
             }
@@ -97,7 +92,7 @@ namespace FDM
 
                 for (int i = 0; i < xNum; i++)
                 {
-                    double initialPrice = Math.Exp(i * dx);
+                    double initialPrice = i * dx;
 
                     pVArray[l, i] =
                         CalculatePV(

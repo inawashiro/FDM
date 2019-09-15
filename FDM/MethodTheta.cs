@@ -58,8 +58,8 @@ namespace FDM
                         break;
 
                     case Types.MethodType.CrankNicolson:
-                        vector = matrixExplicit * vector;
                         vector = matrixImplicit.Solve(vector);
+                        vector = matrixExplicit * vector;
                         break;
                 }
                 
