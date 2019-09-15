@@ -62,12 +62,10 @@
                             methodType,
                             pVArray,
                             parameters.BoundaryPrice,
-                            parameters.Strike,
                             parameters.Maturity,
                             parameters.DomesticRate,
                             parameters.ForeignRate,
-                            parameters.Volatility,
-                            parameters.IsCall);
+                            parameters.Volatility);
                     break;
 
                 case Types.OptionType.Barrier:
@@ -86,12 +84,10 @@
                             methodType,
                             pVArray,
                             parameters.BoundaryPrice,
-                            parameters.Strike,
                             parameters.Maturity,
                             parameters.DomesticRate,
                             parameters.ForeignRate,
-                            parameters.Volatility,
-                            parameters.IsCall);
+                            parameters.Volatility);
                     break;
             }
             return pVArray;

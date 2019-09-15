@@ -17,7 +17,7 @@ namespace FDM
             for (int i = 0; i < xNum; i++)
             {
                 double dx = boundaryPrice / xNum;
-                double initialPrice = i * dx;
+                double initialPrice = Math.Exp(i * dx);
 
                 if (isCall && initialPrice < barrier)
                 {
@@ -92,7 +92,7 @@ namespace FDM
 
                 for (int i = 0; i < xNum; i++)
                 {
-                    double initialPrice = i * dx;
+                    double initialPrice = Math.Exp(i * dx);
 
                     pVArray[l, i] =
                         CalculatePV(

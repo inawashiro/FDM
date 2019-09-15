@@ -16,7 +16,7 @@ namespace FDM
 
             for (int i = 0; i < xNum; i++)
             {
-                double initialPrice = i * dx;
+                double initialPrice = Math.Exp(i * dx);
                 int sign = isCall ? 1 : -1;
 
                 pVArray[0, i] = Math.Max(sign * (initialPrice - strike), 0);
@@ -31,6 +31,7 @@ namespace FDM
         {
             int tNum = pVArray.GetLength(0);
             int xNum = pVArray.GetLength(1);
+            boundaryPrice = Math.Exp(boundaryPrice);
 
             for (int l = 1; l < tNum; l++)
             {
@@ -83,7 +84,7 @@ namespace FDM
 
                 for (int i = 0; i < xNum; i++)
                 {
-                    double initialPrice = i * dx;
+                    double initialPrice = Math.Exp(i * dx);
 
                     pVArray[l, i] =
                         CalculatePV(

@@ -8,12 +8,10 @@ namespace FDM
             Types.MethodType methodType,
             double[,] pVArray,
             double boundaryPrice,
-            double strike,
             double maturity,
             double domesticRate,
             double foreignRate,
-            double volatility,
-            bool isCall)
+            double volatility)
         {
             int tNum = pVArray.GetLength(0);
             int xNum = pVArray.GetLength(1);
@@ -24,24 +22,20 @@ namespace FDM
                         methodType,
                         pVArray,
                         boundaryPrice,
-                        strike,
                         maturity,
                         domesticRate,
                         foreignRate,
-                        volatility,
-                        isCall));
+                        volatility));
             var matrixImplicit =
                 Matrix<double>.Build.DenseOfArray(
                     CalculateCoefficientMatrix.Implicit(
                         methodType,
                         pVArray,
                         boundaryPrice,
-                        strike,
                         maturity,
                         domesticRate,
                         foreignRate,
-                        volatility,
-                        isCall));
+                        volatility));
             var vector =
                 Vector<double>.Build.Dense(xNum, i => pVArray[0, i]);
 

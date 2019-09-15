@@ -8,7 +8,7 @@ namespace FDM
         {
             double tol = 1e-3;
 
-            var parameters = ParametersFactory.ForUnitTests(optionType);
+            var parameters = ParametersFactory.Original(optionType);
             var makePVArray = new MakePVArray();
             var analyticArray = makePVArray.Analytic(parameters, optionType);
             var fDMArray = makePVArray.FDM(parameters, optionType, methodType);
