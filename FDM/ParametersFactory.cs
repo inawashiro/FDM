@@ -19,8 +19,8 @@ namespace FDM
 
             var parameters =
                 optionType == Types.OptionType.Vanilla ?
-                new Parameters(10, 100, 0.2, 200, 100, 0, 2e-2, 0.1, true) :
-                new Parameters(10, 200, 0.1, 200, 100, 0, 2e-2, 0.1, 110, true);
+                new Parameters(10, 400, 0.2, Math.Log(200), 100, 0, 2e-2, 0.1, true) :
+                new Parameters(10, 400, 0.1, Math.Log(200), 100, 0, 2e-2, 0.1, 110, true);
 
             return parameters;
         }
