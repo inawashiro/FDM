@@ -48,7 +48,7 @@ namespace FDM
 
         private static void WriteError(StreamWriter file, Types.OptionType optionType, Types.MethodType methodType)
         {
-            var parameters = ParametersFactory.ForConvergenceTests(optionType);
+            var parameters = ParametersFactory.ForVerification(optionType);
             var xNumArray = ParametersFactory.MakeXNumArray();
             int xNumNum = xNumArray.GetLength(0);
 
