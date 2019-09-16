@@ -1,27 +1,25 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-
-namespace FDM
+﻿namespace FDM
 {
     public class CalculateCoefficientMatrix
     {
         public static double[,] Explicit(
             Types.MethodType methodType,
             double[,] pVArray,
-            double boundaryPrice,
+            double[] boundaryPrice,
             double maturity,
             double domesticRate,
-            double foreignRate,
-            double volatility)
+            double[] foreignRate,
+            double[] volatility)
         {
             int tNum = pVArray.GetLength(0);
             int xNum = pVArray.GetLength(1);
-            double dx = boundaryPrice / xNum;
+            double dx = boundaryPrice[0] / xNum;
             double dt = maturity / tNum;
             var coefficientArray = new double[xNum, xNum];
             double theta = DefineTheta.Define(methodType);
 
-            double a1 = domesticRate - foreignRate - 0.5 * volatility * volatility;
-            double b11 = 0.5 * volatility * volatility;
+            double a1 = domesticRate - foreignRate[0] - 0.5 * volatility[0] * volatility[0];
+            double b11 = 0.5 * volatility[0] * volatility[0];
             double f = -domesticRate;
 
             coefficientArray[0, 0] = 1;
@@ -45,21 +43,21 @@ namespace FDM
         public static double[,] Implicit(
             Types.MethodType methodType,
             double[,] pVArray,
-            double boundaryPrice,
+            double[] boundaryPrice,
             double maturity,
             double domesticRate,
-            double foreignRate,
-            double volatility)
+            double[] foreignRate,
+            double[] volatility)
         {
             int tNum = pVArray.GetLength(0);
             int xNum = pVArray.GetLength(1);
-            double dx = boundaryPrice / xNum;
+            double dx = boundaryPrice[0] / xNum;
             double dt = maturity / tNum;
             var coefficientArray = new double[xNum, xNum];
             double theta = DefineTheta.Define(methodType);
 
-            double a1 = domesticRate - foreignRate - 0.5 * volatility * volatility;
-            double b11 = 0.5 * volatility * volatility;
+            double a1 = domesticRate - foreignRate[0] - 0.5 * volatility[0] * volatility[0];
+            double b11 = 0.5 * volatility[0] * volatility[0];
             double f = -domesticRate;
 
             coefficientArray[0, 0] = 1;

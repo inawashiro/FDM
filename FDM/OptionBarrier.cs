@@ -5,9 +5,9 @@ namespace FDM
 {
     public class OptionBarrier
     {
-        public static void SetInitialCondition(
+        public static double[,] SetInitialCondition(
             double[,] pVArray,
-            double boundaryPrice,
+            double[] boundaryPrice,
             double strike,
             double barrier,
             bool isCall)
@@ -16,7 +16,7 @@ namespace FDM
 
             for (int i = 0; i < xNum; i++)
             {
-                double dx = boundaryPrice / xNum;
+                double dx = boundaryPrice[0] / xNum;
                 double initialPrice = Math.Exp(i * dx);
 
                 if (isCall && initialPrice < barrier)
@@ -28,9 +28,10 @@ namespace FDM
                     pVArray[0, i] = Math.Max(strike - initialPrice, 0);
                 }
             }
+            return pVArray;
         }
 
-        public static void SetBoundaryCondition(
+        public static double[,] SetBoundaryCondition(
             double[,] pVArray)
         {
             int tNum = pVArray.GetLength(0);
@@ -41,15 +42,16 @@ namespace FDM
                 pVArray[l, 0] = 0;
                 pVArray[l, xNum - 1] = 0;
             }
+            return pVArray;
         }
 
-        private static double CalculatePV(
+        private static double CalculateAnalyticPV(
             double initialPrice,
             double strike,
             double maturity,
             double domesticRate,
-            double foreignRate,
-            double volatility,
+            double[] foreignRate,
+            double[] volatility,
             double barrier,
             bool isCall)
         {
@@ -57,8 +59,10 @@ namespace FDM
 
             Func<double, double, double> CalcD = (threshold, scale) =>
             {
-                double d = (Math.Log(initialPrice / threshold) + (domesticRate - foreignRate) * maturity) / (volatility * Math.Sqrt(maturity));
-                return d + scale * volatility * Math.Sqrt(maturity);
+                double d =
+                    (Math.Log(initialPrice / threshold) + (domesticRate - foreignRate[0]) * maturity)
+                    / (volatility[0] * Math.Sqrt(maturity));
+                return d + scale * volatility[0] * Math.Sqrt(maturity);
             };
             double dPlus = CalcD(strike, 0.5);
             double dMinus = CalcD(strike, -0.5);
@@ -66,25 +70,25 @@ namespace FDM
             double dBarrierMinus = CalcD(barrier, -1);
 
             return
-                sign * initialPrice * Math.Exp(-foreignRate * maturity) * (Normal.CDF(0, 1, sign * dPlus) - Normal.CDF(0, 1, sign * dBarrierPlus))
-                    - sign * strike * Math.Exp(-domesticRate * maturity) * (Normal.CDF(0, 1, sign * dMinus) - Normal.CDF(0, 1, sign * dBarrierMinus));
+                sign * initialPrice * Math.Exp(-foreignRate[0] * maturity) * (Normal.CDF(0, 1, sign * dPlus) - Normal.CDF(0, 1, sign * dBarrierPlus))
+                - sign * strike * Math.Exp(-domesticRate * maturity) * (Normal.CDF(0, 1, sign * dMinus) - Normal.CDF(0, 1, sign * dBarrierMinus));
         }
 
-        public static double[,] CalculatePVArray(
+        public static double[,] MakeAnalyticPVArray(
             double[,] pVArray,
-            double boundaryPrice,
+            double[] boundaryPrice,
             double strike,
             double maturity,
             double domesticRate,
-            double foreignRate,
-            double volatility,
+            double[] foreignRate,
+            double[] volatility,
             double barrier,
             bool isCall)
         {
             int tNum = pVArray.GetLength(0);
             int xNum = pVArray.GetLength(1);
             double dt = maturity / tNum;
-            double dx = boundaryPrice / xNum;
+            double dx = boundaryPrice[0] / xNum;
 
             for (int l = 1; l < tNum; l++)
             {
@@ -95,7 +99,7 @@ namespace FDM
                     double initialPrice = Math.Exp(i * dx);
 
                     pVArray[l, i] =
-                        CalculatePV(
+                        CalculateAnalyticPV(
                             initialPrice,
                             strike,
                             time,
