@@ -7,11 +7,11 @@ namespace FDM
         public static double[,] CalculatePVArray(
             Types.MethodType methodType,
             double[,] pVArray,
-            double boundaryPrice,
+            double[] boundaryPrice,
             double maturity,
             double domesticRate,
-            double foreignRate,
-            double volatility)
+            double[] foreignRate,
+            double[] volatility)
         {
             int tNum = pVArray.GetLength(0);
             int xNum = pVArray.GetLength(1);
@@ -26,6 +26,7 @@ namespace FDM
                         domesticRate,
                         foreignRate,
                         volatility));
+
             var matrixImplicit =
                 Matrix<double>.Build.DenseOfArray(
                     CalculateCoefficientMatrix.Implicit(
@@ -36,6 +37,7 @@ namespace FDM
                         domesticRate,
                         foreignRate,
                         volatility));
+
             var vector =
                 Vector<double>.Build.Dense(xNum, i => pVArray[0, i]);
 

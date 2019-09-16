@@ -41,6 +41,7 @@
     <Compile Remove="BSOptionValueCalculatorFactory.cs" />
     <Compile Remove="IOptionValueCalculator.cs" />
     <Compile Remove="IParameters.cs" />
+    <Compile Remove="MethodAnalytic.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MathNet.Numerics" Version="4.8.1" />

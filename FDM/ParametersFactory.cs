@@ -6,22 +6,57 @@ namespace FDM
     {
         public static Parameters Original(Types.OptionType optionType)
         {
-            // tNum,
-            // xNum,
-            // maturity,
-            // boundaryPrice,
-            // strike,
-            // domesticRate,
-            // foreignRate,
-            // volatility
-            // barrier
-            // call/put
+            var parameters = default(Parameters);
 
-            var parameters =
-                optionType == Types.OptionType.Vanilla ?
-                new Parameters(10, 400, 0.2, Math.Log(200), 100, 0, 2e-2, 0.1, true) :
-                new Parameters(10, 400, 0.1, Math.Log(200), 100, 0, 2e-2, 0.1, 110, true);
+            switch (optionType)
+            {
+                case Types.OptionType.Vanilla:
+                    parameters =
+                        new Parameters(
+                            10,                             // tNum
+                            new int[] { 400 },              // xNum
+                            0.2,                            // maturity
+                            new double[] { Math.Log(200) }, // boundaryPrice
+                            100,                            // strike
+                            0,                              // domesticRate
+                            new double[] { 2e-2 },          // foreignRate
+                            new double[] { 0.1 },           // volatility
+                            true                            // isCall
+                            );
+                    break;
 
+                case Types.OptionType.Barrier:
+                    parameters =
+                        new Parameters(
+                            10,                             // tNum
+                            new int[] { 200 },              // xNum
+                            0.2,                            // maturity
+                            new double[] { Math.Log(200) }, // boundaryPrice
+                            100,                            // strike
+                            0,                              // domesticRate
+                            new double[] { 2e-2 },          // foreignRate
+                            new double[] { 0.1 },           // volatility
+                            110,                            // barrier
+                            true                            // isCall
+                            );
+                    break;
+
+                case Types.OptionType.Exchange:
+                    parameters =
+                        new Parameters(
+                            10,                                             // tNum
+                            new int[] { 400, 400 },                         // xNum
+                            0.2,                                            // maturity
+                            new double[] { Math.Log(200), Math.Log(200) },  // boundaryPrice
+                            100,                                            // strike
+                            0,                                              // domesticRate
+                            new double[] { 2e-2, 0 },                       // foreignRate
+                            new double[] { 0.1, 0.2 },                      // volatility
+                            0.5,                                            // correlation
+                            true                                            // isCall
+                            );
+                    break;
+            }
             return parameters;
         }
 
@@ -45,29 +80,52 @@ namespace FDM
 
             for (int j = 0; j < xNumNum; j++)
             {
-                parametersArray[j] =
-                    optionType == Types.OptionType.Vanilla ?
-                        new Parameters(
-                            parameters.TNum,
-                            xNumArray[j],
-                            parameters.Maturity,
-                            parameters.BoundaryPrice,
-                            parameters.Strike,
-                            parameters.DomesticRate,
-                            parameters.ForeignRate,
-                            parameters.Volatility,
-                            parameters.IsCall) :
-                        new Parameters(
-                            parameters.TNum,
-                            xNumArray[j],
-                            parameters.Maturity,
-                            parameters.BoundaryPrice,
-                            parameters.Strike,
-                            parameters.DomesticRate,
-                            parameters.ForeignRate,
-                            parameters.Volatility,
-                            parameters.Barrier,
-                            parameters.IsCall);
+                switch (optionType)
+                {
+                    case Types.OptionType.Vanilla:
+                        parametersArray[j] =
+                            new Parameters(
+                                parameters.TNum,
+                                new int[] { xNumArray[j] },
+                                parameters.Maturity,
+                                parameters.BoundaryPrice,
+                                parameters.Strike,
+                                parameters.DomesticRate,
+                                parameters.ForeignRate,
+                                parameters.Volatility,
+                                parameters.IsCall);
+                        break;
+
+                    case Types.OptionType.Barrier:
+                        parametersArray[j] =
+                            new Parameters(
+                                parameters.TNum,
+                                new int[] { xNumArray[j] },
+                                parameters.Maturity,
+                                parameters.BoundaryPrice,
+                                parameters.Strike,
+                                parameters.DomesticRate,
+                                parameters.ForeignRate,
+                                parameters.Volatility,
+                                parameters.Barrier,
+                                parameters.IsCall);
+                        break;
+
+                    case Types.OptionType.Exchange:
+                        parametersArray[j] =
+                            new Parameters(
+                                parameters.TNum,
+                                new int[] { xNumArray[j] },
+                                parameters.Maturity,
+                                parameters.BoundaryPrice,
+                                parameters.Strike,
+                                parameters.DomesticRate,
+                                parameters.ForeignRate,
+                                parameters.Volatility,
+                                parameters.Correlation,
+                                parameters.IsCall);
+                        break;
+                }
             }
             return parametersArray;
         }

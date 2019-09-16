@@ -5,14 +5,14 @@ namespace FDM
 {
     public class OptionVanilla
     {
-        public static void SetInitialCondition(
+        public static double[,] SetInitialCondition(
             double[,] pVArray,
-            double boundaryPrice,
+            double[] boundaryPrice,
             double strike,
             bool isCall)
         {
             int xNum = pVArray.GetLength(1);
-            double dx = boundaryPrice / xNum;
+            double dx = boundaryPrice[0] / xNum;
 
             for (int i = 0; i < xNum; i++)
             {
@@ -21,62 +21,66 @@ namespace FDM
 
                 pVArray[0, i] = Math.Max(sign * (initialPrice - strike), 0);
             }
+            return pVArray;
         }
 
-        public static void SetBoundaryCondition(
+        public static double[,] SetBoundaryCondition(
             double[,] pVArray,
-            double boundaryPrice,
+            double[] boundaryPrice,
             double strike,
             bool isCall)
         {
             int tNum = pVArray.GetLength(0);
             int xNum = pVArray.GetLength(1);
-            boundaryPrice = Math.Exp(boundaryPrice);
-
+            
             for (int l = 1; l < tNum; l++)
             {
                 pVArray[l, 0] = isCall ? 0 : strike;
-                pVArray[l, xNum - 1] = isCall ? Math.Max(boundaryPrice - strike, 0) : 0;
+                pVArray[l, xNum - 1] = isCall ? Math.Max(Math.Exp(boundaryPrice[0]) - strike, 0) : 0;
             }
+            return pVArray;
         }
 
-        private static double CalculatePV(
+        private static double CalculateAnalyticPV(
             double initialPrice,
             double strike,
             double maturity,
             double domesticRate,
-            double foreignRate,
-            double volatility,
+            double[] foreignRate,
+            double[] volatility,
             bool isCall)
         {
             int sign = isCall ? 1 : -1;
 
             Func<double, double, double> CalcD = (threshold, scale) =>
             {
-                double d = (Math.Log(initialPrice / threshold) + (domesticRate - foreignRate) * maturity) / (volatility * Math.Sqrt(maturity));
-                return d + scale * volatility * Math.Sqrt(maturity);
+                double d =
+                    (Math.Log(initialPrice / threshold) + (domesticRate - foreignRate[0]) * maturity)
+                    / (volatility[0] * Math.Sqrt(maturity));
+                return d + scale * volatility[0] * Math.Sqrt(maturity);
             };
             double dPlus = CalcD(strike, 0.5);
             double dMinus = CalcD(strike, -0.5);
             
-            return sign * initialPrice * Math.Exp(-foreignRate * maturity) * Normal.CDF(0, 1, sign * dPlus)
+            return
+                sign * initialPrice * Math.Exp(-foreignRate[0] * maturity) * Normal.CDF(0, 1, sign * dPlus)
                 - sign * strike * Math.Exp(-domesticRate * maturity) * Normal.CDF(0, 1, sign * dMinus);
         }
 
-        public static double[,] CalculatePVArray(
+        public static double[,] MakeAnalyticPVArray(
             double[,] pVArray,
-            double boundaryPrice,
+            double[] boundaryPrice,
             double strike,
             double maturity,
             double domesticRate,
-            double foreignRate,
-            double volatility,
+            double[] foreignRate,
+            double[] volatility,
             bool isCall)
         {
             int tNum = pVArray.GetLength(0);
             int xNum = pVArray.GetLength(1);
             double dt = maturity / tNum;
-            double dx = boundaryPrice / xNum;
+            double dx = boundaryPrice[0] / xNum;
 
             for (int l = 1; l < tNum; l++)
             {
@@ -87,7 +91,7 @@ namespace FDM
                     double initialPrice = Math.Exp(i * dx);
 
                     pVArray[l, i] =
-                        CalculatePV(
+                        CalculateAnalyticPV(
                             initialPrice,
                             strike,
                             time,
