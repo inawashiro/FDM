@@ -1,6 +1,6 @@
 ﻿namespace FDM
 {
-    public class CalculateCoefficientMatrix
+    public class MakeCoefficientMatrixOneAsset
     {
         public static double[,] Explicit(
             Types.MethodType methodType,

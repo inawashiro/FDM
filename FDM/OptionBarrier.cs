@@ -66,8 +66,8 @@ namespace FDM
             };
             double dPlus = CalcD(strike, 0.5);
             double dMinus = CalcD(strike, -0.5);
-            double dBarrierPlus = CalcD(barrier, 1);
-            double dBarrierMinus = CalcD(barrier, -1);
+            double dBarrierPlus = CalcD(barrier, 0.5);
+            double dBarrierMinus = CalcD(barrier, -0.5);
 
             return
                 sign * initialPrice * Math.Exp(-foreignRate[0] * maturity) * (Normal.CDF(0, 1, sign * dPlus) - Normal.CDF(0, 1, sign * dBarrierPlus))

@@ -61,8 +61,7 @@ namespace FDM
             double domesticRate,
             double[] foreignRate,
             double[] volatility,
-            double correlation,
-            bool isCall)
+            double correlation)
         {
             TNum = tNum;
             XNum = xNum;
@@ -72,7 +71,6 @@ namespace FDM
             ForeignRate = foreignRate;
             Volatility = volatility;
             Correlation = correlation;
-            IsCall = isCall;
         }
 
         public int TNum { set; get; }

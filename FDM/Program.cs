@@ -4,7 +4,8 @@
     {
         static void Main(string[] args)
         {
-            MakeErrorFile.Complete();
+            MakeConvergenceFile.Complete();
+            //MakeErrorDistributionFile.Complete();
         }
     }
 }

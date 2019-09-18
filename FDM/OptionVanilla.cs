@@ -32,8 +32,8 @@ namespace FDM
         {
             int tNum = pVArray.GetLength(0);
             int xNum = pVArray.GetLength(1);
-            
-            for (int l = 1; l < tNum; l++)
+			
+			for (int l = 1; l < tNum; l++)
             {
                 pVArray[l, 0] = isCall ? 0 : strike;
                 pVArray[l, xNum - 1] = isCall ? Math.Max(Math.Exp(boundaryPrice[0]) - strike, 0) : 0;

@@ -18,5 +18,11 @@ namespace FDM
             CrankNicolson,
             ADI
         }
+
+        public enum DifferentialDirection
+        {
+            X,
+            Y
+        }
     }
 }

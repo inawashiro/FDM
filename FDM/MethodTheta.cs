@@ -18,7 +18,7 @@ namespace FDM
 
             var matrixExplicit =
                 Matrix<double>.Build.DenseOfArray(
-                    CalculateCoefficientMatrix.Explicit(
+                    MakeCoefficientMatrixOneAsset.Explicit(
                         methodType,
                         pVArray,
                         boundaryPrice,
@@ -29,7 +29,7 @@ namespace FDM
 
             var matrixImplicit =
                 Matrix<double>.Build.DenseOfArray(
-                    CalculateCoefficientMatrix.Implicit(
+                    MakeCoefficientMatrixOneAsset.Implicit(
                         methodType,
                         pVArray,
                         boundaryPrice,

@@ -10,7 +10,7 @@ namespace FDM
 {
     public class CalculateError
     {
-        public static double MaxAbsoluteError(double[,] pVFDM, double[,] pVAnalytic)
+        public static double MaxAbsolute(double[,] pVFDM, double[,] pVAnalytic)
         {
             int tNum = pVAnalytic.GetLength(0);
             int xNum = pVFDM.GetLength(1);
@@ -21,6 +21,19 @@ namespace FDM
                 absoluteErrorArray[i] = Math.Abs(pVFDM[tNum - 1, i] - pVAnalytic[tNum - 1, i]);
             }
             return absoluteErrorArray.Max();
+        }
+
+        public static double[] AbsoluteArray(double[,] pVFDM, double[,] pVAnalytic)
+        {
+            int tNum = pVAnalytic.GetLength(0);
+            int xNum = pVFDM.GetLength(1);
+            var absoluteErrorArray = new double[xNum];
+
+            for (int i = 0; i < xNum; i++)
+            {
+                absoluteErrorArray[i] = Math.Abs(pVFDM[tNum - 1, i] - pVAnalytic[tNum - 1, i]);
+            }
+            return absoluteErrorArray;
         }
     }
 }
