@@ -55,23 +55,26 @@ namespace FDM
             double barrier,
             bool isCall)
         {
-            int sign = isCall ? 1 : -1;
+            int signCall = isCall ? 1 : -1;
 
-            Func<double, double, double> CalcD = (threshold, scale) =>
+            Func<double, int, double> CalcD = (threshold, signBS) =>
             {
                 double d =
                     (Math.Log(initialPrice / threshold) + (domesticRate - foreignRate[0]) * maturity)
                     / (volatility[0] * Math.Sqrt(maturity));
-                return d + scale * volatility[0] * Math.Sqrt(maturity);
+                return d + signBS * 0.5 * volatility[0] * Math.Sqrt(maturity);
             };
-            double dPlus = CalcD(strike, 0.5);
-            double dMinus = CalcD(strike, -0.5);
-            double dBarrierPlus = CalcD(barrier, 0.5);
-            double dBarrierMinus = CalcD(barrier, -0.5);
+            double dPlus = CalcD(strike, 1);
+            double dMinus = CalcD(strike, -1);
+            double dBarrierPlus = CalcD(barrier, 1);
+            double dBarrierMinus = CalcD(barrier, -1);
+
+            double foreignProbability = Normal.CDF(0, 1, signCall * dPlus) - Normal.CDF(0, 1, signCall * dBarrierPlus);
+            double domesticProbability = Normal.CDF(0, 1, signCall * dMinus) - Normal.CDF(0, 1, signCall * dBarrierMinus);
 
             return
-                sign * initialPrice * Math.Exp(-foreignRate[0] * maturity) * (Normal.CDF(0, 1, sign * dPlus) - Normal.CDF(0, 1, sign * dBarrierPlus))
-                - sign * strike * Math.Exp(-domesticRate * maturity) * (Normal.CDF(0, 1, sign * dMinus) - Normal.CDF(0, 1, sign * dBarrierMinus));
+                signCall * initialPrice * Math.Exp(-foreignRate[0] * maturity) * foreignProbability
+                - signCall * strike * Math.Exp(-domesticRate * maturity) * domesticProbability;
         }
 
         public static double[,] MakeAnalyticPVArray(
