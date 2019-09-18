@@ -15,12 +15,12 @@ namespace FDM
                         new Parameters(
                             10,                             // tNum
                             new int[] { 400 },              // xNum
-                            0.2,                            // maturity
+                            0.4,                            // maturity
                             new double[] { Math.Log(200) }, // boundaryPrice
                             100,                            // strike
                             0,                              // domesticRate
                             new double[] { 2e-2 },          // foreignRate
-                            new double[] { 0.1 },           // volatility
+                            new double[] { 0.2 },           // volatility
                             true                            // isCall
                             );
                     break;
@@ -29,40 +29,38 @@ namespace FDM
                     parameters =
                         new Parameters(
                             10,                             // tNum
-                            new int[] { 200 },              // xNum
-                            0.2,                            // maturity
+                            new int[] { 400 },              // xNum
+                            0.4,                            // maturity
                             new double[] { Math.Log(200) }, // boundaryPrice
                             100,                            // strike
                             0,                              // domesticRate
                             new double[] { 2e-2 },          // foreignRate
-                            new double[] { 0.1 },           // volatility
+                            new double[] { 0.2 },           // volatility
                             110,                            // barrier
                             true                            // isCall
-                            );
-                    break;
-
-                case Types.OptionType.Exchange:
-                    parameters =
-                        new Parameters(
-                            10,                                             // tNum
-                            new int[] { 400, 400 },                         // xNum
-                            0.2,                                            // maturity
-                            new double[] { Math.Log(200), Math.Log(200) },  // boundaryPrice
-                            100,                                            // strike
-                            0,                                              // domesticRate
-                            new double[] { 2e-2, 0 },                       // foreignRate
-                            new double[] { 0.1, 0.2 },                      // volatility
-                            0.5,                                            // correlation
-                            true                                            // isCall
                             );
                     break;
             }
             return parameters;
         }
 
+        public static double[] MakeXArray(Parameters parameters)
+        {
+            var xNum = parameters.XNum;
+            var boundaryPrice = parameters.BoundaryPrice;
+            var dx = new double[] { boundaryPrice[0] / xNum[0] };
+            var xArray = new double[xNum[0]];
+
+            for (int j = 0; j < xNum[0]; j++)
+            {
+                xArray[j] = Math.Exp(j * dx[0]);
+            }
+            return xArray;
+        }
+
         public static int[] MakeXNumArray()
         {
-            int xNumNum = 5;
+            int xNumNum = 7;
             var xNumArray = new int[xNumNum];
             for (int j = 0; j < xNumNum; j++)
             {
@@ -118,12 +116,10 @@ namespace FDM
                                 new int[] { xNumArray[j] },
                                 parameters.Maturity,
                                 parameters.BoundaryPrice,
-                                parameters.Strike,
                                 parameters.DomesticRate,
                                 parameters.ForeignRate,
                                 parameters.Volatility,
-                                parameters.Correlation,
-                                parameters.IsCall);
+                                parameters.Correlation);
                         break;
                 }
             }

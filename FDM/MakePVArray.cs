@@ -2,7 +2,7 @@
 {
     public class MakePVArray
     {
-        public double[,] Analytic(Parameters parameters, Types.OptionType optionType)
+        public double[,] AnalyticOneAsset(Parameters parameters, Types.OptionType optionType)
         {
             var pVArray = default(double[,]);
 
@@ -38,16 +38,16 @@
             return pVArray;
         }
 
-        public double[,] FDM(Parameters parameters, Types.OptionType optionType, Types.MethodType methodType) 
+        public double[,] FDMOneAsset(Parameters parameters, Types.OptionType optionType, Types.MethodType methodType) 
         {
-            var pVArray =  new double[parameters.TNum, parameters.XNum[0]];
+            var pVArray = default(double[,]);
 
             switch (optionType)
             {
                 case Types.OptionType.Vanilla:
                     pVArray =
                         OptionVanilla.SetInitialCondition(
-                            pVArray,
+                            new double[parameters.TNum, parameters.XNum[0]],
                             parameters.BoundaryPrice,
                             parameters.Strike,
                             parameters.IsCall);
@@ -73,7 +73,7 @@
                 case Types.OptionType.Barrier:
                     pVArray =
                         OptionBarrier.SetInitialCondition(
-                            pVArray,
+                            new double[parameters.TNum, parameters.XNum[0]],
                             parameters.BoundaryPrice,
                             parameters.Strike,
                             parameters.Barrier,

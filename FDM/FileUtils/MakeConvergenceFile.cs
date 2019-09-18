@@ -3,20 +3,20 @@ using System.IO;
 
 namespace FDM
 {
-    public static class MakeErrorFile
+    public static class MakeConvergenceFile
     {
         public static void Complete()
         {
             var file =
                 new StreamWriter(
-                    @"/Users/hiromichi/Desktop/official/job/advanced/data/BS/Vanilla/Error.csv",
+                    @"/Users/hiromichi/Desktop/official/job/advanced/data/Vanilla/Convergence.csv",
                     false,
                     Encoding.UTF8);
             MergeIndexAndValue(file, Types.OptionType.Vanilla);
 
             file =
                 new StreamWriter(
-                    @"/Users/hiromichi/Desktop/official/job/advanced/data/BS/Barrier/Error.csv",
+                    @"/Users/hiromichi/Desktop/official/job/advanced/data/Barrier/Convergence.csv",
                     false,
                     Encoding.UTF8);
             MergeIndexAndValue(file, Types.OptionType.Barrier);
@@ -26,14 +26,14 @@ namespace FDM
             StreamWriter file,
             Types.OptionType optionType)
         {
-            WriteIndex(file, optionType);
+            WriteIndex(file);
             WriteError(file, optionType, Types.MethodType.Explicit);
             WriteError(file, optionType, Types.MethodType.Implicit);
             WriteError(file, optionType, Types.MethodType.CrankNicolson);
             file.Close();
         }
 
-        private static void WriteIndex(StreamWriter file, Types.OptionType optionType)
+        private static void WriteIndex(StreamWriter file)
         {
             var xNumArray = ParametersFactory.MakeXNumArray();
             int xNumNum = xNumArray.GetLength(0);
@@ -57,10 +57,10 @@ namespace FDM
             {
                 var makePVArray = new MakePVArray();
                 var analyticArray =
-                    makePVArray.Analytic(parameters[j], optionType);
+                    makePVArray.AnalyticOneAsset(parameters[j], optionType);
                 var fDMArray =
-                    makePVArray.FDM(parameters[j], optionType, methodType);
-                double error = CalculateError.MaxAbsoluteError(fDMArray, analyticArray);
+                    makePVArray.FDMOneAsset(parameters[j], optionType, methodType);
+                double error = CalculateError.MaxAbsolute(fDMArray, analyticArray);
 
                 file.Write(error + ",");
             }

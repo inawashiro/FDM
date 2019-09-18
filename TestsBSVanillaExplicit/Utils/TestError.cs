@@ -10,9 +10,9 @@ namespace FDM
 
             var parameters = ParametersFactory.Original(optionType);
             var makePVArray = new MakePVArray();
-            var analyticArray = makePVArray.Analytic(parameters, optionType);
-            var fDMArray = makePVArray.FDM(parameters, optionType, methodType);
-            double error = CalculateError.MaxAbsoluteError(fDMArray, analyticArray);
+            var analyticArray = makePVArray.AnalyticOneAsset(parameters, optionType);
+            var fDMArray = makePVArray.FDMOneAsset(parameters, optionType, methodType);
+            double error = CalculateError.MaxAbsolute(fDMArray, analyticArray);
 
             Assert.Equal(error, tol);
         }
