@@ -20,6 +20,10 @@ namespace FDM
                 case Types.MethodType.CrankNicolson:
                     theta = 0.5;
                     break;
+
+                case Types.MethodType.ADI:
+                    theta = 0.5;
+                    break;
             }
             return theta;
         }

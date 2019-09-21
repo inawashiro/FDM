@@ -1,56 +1,99 @@
-﻿//namespace FDM
-//{
-//    public class MakePVArrayTwoAsset
-//    {
-//        public double[,,] Analytic(Parameters parameters, Types.OptionType optionType)
-//        {
-//            var pVArray = default(double[,,]);
+﻿namespace FDM
+{
+    public class MakePVArrayTwoAsset
+    {
+        public double[,] Analytic(Parameters parameters, Types.OptionType optionType)
+        {
+            var pVArray = default(double[,]);
 
-//            switch (optionType)
-//            {
-//                case Types.OptionType.Exchange:
-//                    pVArray =
-//                        OptionExchange.MakeAnalyticPVArray(
-//                            new double[parameters.TNum, parameters.XNum[0], parameters.XNum[1]],
-//                            parameters.BoundaryPrice,
-//                            parameters.Maturity,
-//                            parameters.ForeignRate,
-//                            parameters.Volatility,
-//                            parameters.Correlation);
-//                    break;
-//            }
-//            return pVArray;
-//        }
+            switch (optionType)
+            {
+                case Types.OptionType.Vanilla:
+                    pVArray =
+                        OptionVanilla.MakeAnalyticPVArray(
+                            new double[parameters.TNum, parameters.XNum[0]],
+                            parameters.BoundaryPrice,
+                            parameters.Strike,
+                            parameters.Maturity,
+                            parameters.DomesticRate,
+                            parameters.ForeignRate,
+                            parameters.Volatility,
+                            parameters.IsCall);
+                    break;
 
-//        public double[,,] FDM(Parameters parameters, Types.OptionType optionType, Types.MethodType methodType) 
-//        {
-//            var pVArray = default(double[,,]);
+                case Types.OptionType.Barrier:
+                    pVArray =
+                        OptionBarrier.MakeAnalyticPVArray(
+                            new double[parameters.TNum, parameters.XNum[0]],
+                            parameters.BoundaryPrice,
+                            parameters.Strike,
+                            parameters.Maturity,
+                            parameters.DomesticRate,
+                            parameters.ForeignRate,
+                            parameters.Volatility,
+                            parameters.Barrier,
+                            parameters.IsCall);
+                    break;
+            }
+            return pVArray;
+        }
 
-//            switch (optionType)
-//            {
-//                case Types.OptionType.Vanilla:
-//                    pVArray =
-//                        OptionExchange.SetInitialCondition(
-//                            new double[parameters.TNum, parameters.XNum[0], parameters.XNum[1]],
-//                            parameters.BoundaryPrice);
+        public double[,] FDM(Parameters parameters, Types.OptionType optionType, Types.MethodType methodType) 
+        {
+            var pVArray = default(double[,]);
 
-//                    pVArray =
-//                        OptionExchange.SetBoundaryCondition(
-//                            pVArray,
-//                            parameters.BoundaryPrice);
+            switch (optionType)
+            {
+                case Types.OptionType.Vanilla:
+                    pVArray =
+                        OptionVanilla.SetInitialCondition(
+                            new double[parameters.TNum, parameters.XNum[0]],
+                            parameters.BoundaryPrice,
+                            parameters.Strike,
+                            parameters.IsCall);
 
-//                    pVArray =
-//                        MethodADI.CalculatePVArray(
-//                            methodType,
-//                            pVArray,
-//                            parameters.BoundaryPrice,
-//                            parameters.Maturity,
-//                            parameters.DomesticRate,
-//                            parameters.ForeignRate,
-//                            parameters.Volatility);
-//                    break;
-//            }
-//            return pVArray;
-//        }
-//    }
-//}
+                    pVArray =
+                        OptionVanilla.SetBoundaryCondition(
+                            pVArray,
+                            parameters.BoundaryPrice,
+                            parameters.Strike,
+                            parameters.IsCall);
+
+                    pVArray =
+                        MethodTheta.CalculatePVArray(
+                            methodType,
+                            pVArray,
+                            parameters.BoundaryPrice,
+                            parameters.Maturity,
+                            parameters.DomesticRate,
+                            parameters.ForeignRate,
+                            parameters.Volatility);
+                    break;
+
+                case Types.OptionType.Barrier:
+                    pVArray =
+                        OptionBarrier.SetInitialCondition(
+                            new double[parameters.TNum, parameters.XNum[0]],
+                            parameters.BoundaryPrice,
+                            parameters.Strike,
+                            parameters.Barrier,
+                            parameters.IsCall);
+
+                    pVArray =
+                        OptionBarrier.SetBoundaryCondition(pVArray);
+
+                    pVArray =
+                        MethodTheta.CalculatePVArray(
+                            methodType,
+                            pVArray,
+                            parameters.BoundaryPrice,
+                            parameters.Maturity,
+                            parameters.DomesticRate,
+                            parameters.ForeignRate,
+                            parameters.Volatility);
+                    break;
+            }
+            return pVArray;
+        }
+    }
+}
