@@ -1,8 +1,8 @@
 ﻿namespace FDM
 {
-    public class MakePVArray
+    public class MakePVArrayOneAsset
     {
-        public double[,] AnalyticOneAsset(Parameters parameters, Types.OptionType optionType)
+        public double[,] Analytic(Parameters parameters, Types.OptionType optionType)
         {
             var pVArray = default(double[,]);
 
@@ -38,7 +38,7 @@
             return pVArray;
         }
 
-        public double[,] FDMOneAsset(Parameters parameters, Types.OptionType optionType, Types.MethodType methodType) 
+        public double[,] FDM(Parameters parameters, Types.OptionType optionType, Types.MethodType methodType) 
         {
             var pVArray = default(double[,]);
 

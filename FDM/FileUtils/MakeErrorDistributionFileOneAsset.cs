@@ -3,7 +3,7 @@ using System.IO;
 
 namespace FDM
 {
-    public static class MakeErrorDistributionFile
+    public static class MakeErrorDistributionFileOneAsset
     {
         public static void Complete()
         {
@@ -50,11 +50,11 @@ namespace FDM
             file.Write(",");
             for (int j = 0; j < xNum; j++)
             {
-                var makePVArray = new MakePVArray();
+                var makePVArray = new MakePVArrayOneAsset();
                 var analyticArray =
-                    makePVArray.AnalyticOneAsset(parameters, optionType);
+                    makePVArray.Analytic(parameters, optionType);
                 var fDMArray =
-                    makePVArray.FDMOneAsset(parameters, optionType, methodType);
+                    makePVArray.FDM(parameters, optionType, methodType);
                 
                 errorArray[j] = CalculateError.AbsoluteArray(fDMArray, analyticArray)[j];
 

@@ -50,21 +50,24 @@ namespace FDM
             double[] volatility,
             bool isCall)
         {
-            int sign = isCall ? 1 : -1;
+            int signCall = isCall ? 1 : -1;
 
-            Func<double, double, double> CalcD = (threshold, scale) =>
+            Func<double, int, double> CalcD = (threshold, signBS) =>
             {
                 double d =
                     (Math.Log(initialPrice / threshold) + (domesticRate - foreignRate[0]) * maturity)
                     / (volatility[0] * Math.Sqrt(maturity));
-                return d + scale * volatility[0] * Math.Sqrt(maturity);
+                return d + signBS * 0.5 * volatility[0] * Math.Sqrt(maturity);
             };
-            double dPlus = CalcD(strike, 0.5);
-            double dMinus = CalcD(strike, -0.5);
-            
+            double dPlus = CalcD(strike, 1);
+            double dMinus = CalcD(strike, -1);
+
+            double foreignProbability = Normal.CDF(0, 1, signCall * dPlus);
+            double domesticProbability = Normal.CDF(0, 1, signCall * dMinus);
+
             return
-                sign * initialPrice * Math.Exp(-foreignRate[0] * maturity) * Normal.CDF(0, 1, sign * dPlus)
-                - sign * strike * Math.Exp(-domesticRate * maturity) * Normal.CDF(0, 1, sign * dMinus);
+                signCall * initialPrice * Math.Exp(-foreignRate[0] * maturity) * foreignProbability
+                - signCall * strike * Math.Exp(-domesticRate * maturity) * domesticProbability;
         }
 
         public static double[,] MakeAnalyticPVArray(

@@ -3,7 +3,7 @@ using System.IO;
 
 namespace FDM
 {
-    public static class MakeConvergenceFile
+    public static class MakeConvergenceFileOneAsset
     {
         public static void Complete()
         {
@@ -55,11 +55,11 @@ namespace FDM
             file.Write(",");
             for (int j = 0; j < xNumNum; j++)
             {
-                var makePVArray = new MakePVArray();
+                var makePVArray = new MakePVArrayOneAsset();
                 var analyticArray =
-                    makePVArray.AnalyticOneAsset(parameters[j], optionType);
+                    makePVArray.Analytic(parameters[j], optionType);
                 var fDMArray =
-                    makePVArray.FDMOneAsset(parameters[j], optionType, methodType);
+                    makePVArray.FDM(parameters[j], optionType, methodType);
                 double error = CalculateError.MaxAbsolute(fDMArray, analyticArray);
 
                 file.Write(error + ",");

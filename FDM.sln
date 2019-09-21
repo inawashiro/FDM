@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FDM", "FDM\FDM.csproj", "{C260901F-0AF2-4D00-8BB6-C58C7E0CB4B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsBS", "TestsBSVanillaExplicit\TestsBS.csproj", "{D8B63654-F2F9-4BC5-8AFF-01A9E2A8D6B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsFDM", "TestsBSVanillaExplicit\TestsFDM.csproj", "{D8B63654-F2F9-4BC5-8AFF-01A9E2A8D6B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
