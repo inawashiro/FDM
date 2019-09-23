@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            MakeConvergenceFileOneAsset.Complete();
+            //MakeConvergenceFileOneAsset.Complete();
             //MakeErrorDistributionFileOneAsset.Complete();
         }
     }
