@@ -8,7 +8,7 @@ using MathNet.Numerics.Distributions;
 
 namespace FDM
 {
-    public class CalculateError
+    public class CalculateErrorOneAsset
     {
         public static double MaxAbsolute(double[,] pVFDM, double[,] pVAnalytic)
         {
