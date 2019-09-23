@@ -4,8 +4,8 @@
     {
         static void Main(string[] args)
         {
-            //MakeConvergenceFileOneAsset.Complete();
-            //MakeErrorDistributionFileOneAsset.Complete();
+            MakeConvergenceFileOneAsset.Complete();
+            MakeErrorDistributionFileOneAsset.Complete();
         }
     }
 }
